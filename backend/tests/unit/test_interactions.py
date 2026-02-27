@@ -83,3 +83,22 @@ def test_filter_handles_large_item_id() -> None:
     result = _filter_by_item_id(interactions, large_id)
     assert len(result) == 1
     assert result[0].item_id == large_id
+
+
+def test_filter_returns_multiple_matches() -> None:
+    interactions = [_make_log(1, 1, 3), _make_log(2, 2, 3), _make_log(3, 1, 1)]
+    result = _filter_by_item_id(interactions, 3)
+    assert len(result) == 2
+
+
+def test_filter_returns_empty_when_no_match() -> None:
+    interactions = [_make_log(1, 1, 1), _make_log(2, 2, 2)]
+    result = _filter_by_item_id(interactions, 99)
+    assert result == []
+
+
+def test_filter_with_item_id_zero() -> None:
+    interactions = [_make_log(1, 1, 0), _make_log(2, 2, 1)]
+    result = _filter_by_item_id(interactions, 0)
+    assert len(result) == 1
+    assert result[0].id == 1
